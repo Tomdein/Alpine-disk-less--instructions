@@ -55,7 +55,7 @@ edit syslinux conf (bootloader conf) so it loads lbu overlays from the second pa
 ## Fourth
 you remove USB1 and reboot. Then you run the `finish_diskless.sh` which is basically a extracted `setup-alpine` without the last disks part (that always formats the disk) and a lbu and apk cache setup.
 
-# Install and boo from the same USB
+# Install and boot from the same USB
 It should be possible if you backup the necessary folders to RAM (ramfs) before formatting the 'USB2' (now only USB1)
 
 So if you combine this guide and [this](https://www.reddit.com/r/AlpineLinux/s/0oJiaCLPjN) (up to 13):
