@@ -22,10 +22,10 @@ Single drive (SSD/USB...) with:
 
 # TLDR
 1. Create bootable USB1 with [Alpine Linux ISO](https://alpinelinux.org/downloads/)
-2. Copy the scripts from this repo onto the USB1 drive.
-3. Connect USB1 with the ISO and boot it (so it is /dev/sda).
-4. Connect the target USB2 for install (so it is /dev/sdb).
-5. Run `prepare_usb2_diskless.sh` script.
+2. Copy the scripts from this repo onto the USB1 drive
+3. Connect USB1 with the ISO and boot it (so it is /dev/sda)
+4. Connect the target USB2 for install (so it is /dev/sdb)
+5. Run `prepare_usb2_diskless.sh` script
 6. Disconnect USB1 with ISO
 7. Reboot
 8. Run the `finish_usb2_diskless.sh` form `/media/usb` or `/media/sdaX`
@@ -77,18 +77,18 @@ Basically you this is the compilation of the following parts of the docs:
 In the data & diskless modes, you can setup [Local APK cache](https://wiki.alpinelinux.org/wiki/Local_APK_cache) so you do not have to download the APKs on every boot as nothing is saved after reboot (only `\var` on data mode)
 
 ### My Alpine linux installation:
-- Have the OS in RAM like [data/diskless](#types-of-alpine-linux-installations), but save `/var` & `/home` onto 2 separate partitions. You could easily use single partition or create more partitions and mount them.
+- Have the OS in RAM like [data/diskless](#types-of-alpine-linux-installations), but save `/var` & `/home` onto 2 separate partitions. You could easily use single partition or create more partitions and mount them
 
 Therefore you need to do:
-- Partition the target USB. The OS partition needs to be [bootable](https://wiki.alpinelinux.org/wiki/Create_a_Bootable_Device#:~:text=Create%20a%20partition%20sdXY%20with%20the%20desired%20size%2C%20set%20the%20type%20to%20win95%20fat%2C%20and%20set%20the%20bootable%20flag%20on%20it%2C%20or%20use%20the%20following%20command%20to%20use%20entire%20disk%3A). For this you need to have internet so run `setup-alpine` and `ctrl+c` after you reach [APK repo setup](https://wiki.alpinelinux.org/wiki/Installation#:~:text=Mirror%20(From%20where%20to%20download%20packages.%20Choose%20the%20organization%20you%20trust%20giving%20your%20usage%20patterns%20to.)).
-- Use `setup-bootable` to create the system with OS.
+- Partition the target USB. The OS partition needs to be [bootable](https://wiki.alpinelinux.org/wiki/Create_a_Bootable_Device#:~:text=Create%20a%20partition%20sdXY%20with%20the%20desired%20size%2C%20set%20the%20type%20to%20win95%20fat%2C%20and%20set%20the%20bootable%20flag%20on%20it%2C%20or%20use%20the%20following%20command%20to%20use%20entire%20disk%3A). For this you need to have internet so run `setup-alpine` and `ctrl+c` after you reach [APK repo setup](https://wiki.alpinelinux.org/wiki/Installation#:~:text=Mirror%20(From%20where%20to%20download%20packages.%20Choose%20the%20organization%20you%20trust%20giving%20your%20usage%20patterns%20to.))
+- Use `setup-bootable` to create the system with OS
 - Copy `/var/` onto partition `/dev/sdb2/` (will be `/dev/sdb2` after you remove the install USB and leave only target USB that is now `sdb2`)
-- Edit `/media/boot/boot/syslinux/syslinux.cfg` so `modules` has `,ext4,...` and add `apkovl=sda2` line under the `modules` [like so](#syslinuxcfg). This enables the search of [APK overlay](https://wiki.alpinelinux.org/wiki/Alpine_local_backup) on `ext4` partition `/dev/sda2` (Just as before - the drive is now `sdb`, but will be `sda`).
+- Edit `/media/boot/boot/syslinux/syslinux.cfg` so `modules` has `,ext4,...` and add `apkovl=sda2` line under the `modules` [like so](#syslinuxcfg). This enables the search of [APK overlay](https://wiki.alpinelinux.org/wiki/Alpine_local_backup) on `ext4` partition `/dev/sda2` (Just as before - the drive is now `sdb`, but will be `sda`)
 
 Now you can poweroff and disconnect install USB -> boot the target USB
-- On after booting the target USB you need to mount the partitions - just look at [`pre_finish_usb2_diskless.sh`](pre_finish_usb2_diskless.sh).
+- On after booting the target USB you need to mount the partitions - just look at [`pre_finish_usb2_diskless.sh`](pre_finish_usb2_diskless.sh)
 - Run `setup-alpine` WITHOUT reaching disk setup at the end - automatically calls `setup-disk` that formats the drive - so you have to carve the `setup-alpine` out. I do it using `sed` in [`prepare_usb2_diskless.sh`](prepare_usb2_diskless.sh)
-- Edit `/etc/lbu/lbu.conf` so that the [Alpine local backup](https://wiki.alpinelinux.org/wiki/Alpine_local_backup) is saved at the right location - on the `/var` partition - add `LBU_BACKUPDIR=/var` [like so](#lbuconf).
+- Edit `/etc/lbu/lbu.conf` so that the [Alpine local backup](https://wiki.alpinelinux.org/wiki/Alpine_local_backup) is saved at the right location - on the `/var` partition - add `LBU_BACKUPDIR=/var` [like so](#lbuconf)
 - [Enable local APK cache](https://wiki.alpinelinux.org/wiki/Local_APK_cache#:~:text=Cache%20can%20also%20be%20manually%20enabled%20by%20creating%20a%20cache%20dir%20and%20then%20symlink%20it%20to%20/etc/apk/cache%3A) - just run:
 ```
 mkdir -p /var/cache/apk
