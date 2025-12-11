@@ -9,8 +9,10 @@ Did you found out after 3 days, that the `setup-*` scripts usually format the US
 
 Are you tired of going through the `setup-alpine` for the 100th time (BTW... You can `ctrl+c` after the apk repo setup) 
 
-This guide is for you!
+Then this guide is for you!
+
 ---
+
 # Desired result
 Single drive (SSD/USB...) with:
 - (Mostly) Imutable OS partition
