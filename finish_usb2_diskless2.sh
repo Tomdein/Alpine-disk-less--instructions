@@ -17,15 +17,6 @@ echo
 read -p "Type YES to continue: " CONFIRM
 [ "$CONFIRM" = "YES" ] || { echo "AbORTED."; exit 1; }
 
-# # ------------------------------
-# # 0. Initial setup (eth/wlan, dns, apk repos)
-# # ------------------------------
-# echo ">>> Initial network and repository setup"
-# setup-interfaces
-# rc-service networking restart
-# setup-dns
-# setup-apkrepos
-
 # ------------------------------
 # 1. Update fstab on USB2 to mount /var and /home
 # ------------------------------
@@ -68,10 +59,25 @@ service syslog --quiet condrestart
 # setup-alpine -q
 
 setup-keymap
-setup-hostname
-setup-interfaces
-rc-service networking restart
-setup-dns
+
+setup-hostname ${HOSTNAMEOPTS} && if [ -z "$SSH_CONNECTION" ]; then
+  if rc-service --quiet networking status; then
+    # manually restart networking, forcing this script to wait until networking starts
+    rc-service --quiet networking stop
+    rc-service --quiet hostname restart
+    rc-service --quiet networking start
+  else
+    rc-service --quiet hostname restart
+  fi
+fi
+setup-devd -C mdev # just to bootstrap
+
+[ -z "$SSH_CONNECTION" ] && rst_if=1
+setup-interfaces ${rst_if:+-r} #rst_if == 1 -> setup-interfaces -r -> rc-service networking restart
+# setup up dns if no dhcp was configured
+if [ -f "$ROOT"/etc/network/interfaces ] && ! grep -q '^iface.*dhcp' "$ROOT"/etc/network/interfaces; then
+	setup-dns
+fi
 
 # run all skipped setup steps manually
 echo
@@ -82,9 +88,23 @@ while ! $MOCK passwd ; do
 done
 
 setup-timezone
+echo
+
+rc-update --quiet add networking boot
+rc-update --quiet add seedrng boot || rc-update --quiet add urandom boot
+openrc ${SSH_CONNECTION:+-n} boot
+openrc ${SSH_CONNECTION:+-n} default
+
 setup-proxy
-setup-sshd
 setup-ntp
+setup-apkrepos
+
+setup-sshd
+root_keys="$ROOT"/root/.ssh/authorized_keys
+if [ -f "$root_keys" ]; then
+	lbu add "$ROOT"/root
+fi
+
 
 # ------------------------------
 # 3. Setup LBU
@@ -107,6 +127,10 @@ LBU_BACKUPDIR='"$LBU_DIR"'
 echo ">>> Setting up apk cache on /var/cache/apk"
 mkdir -p /var/cache/apk
 ln -s /var/cache/apk /etc/apk/cache
+
+if [ -L "$ROOT"/etc/apk/cache ]; then
+  apk cache sync
+fi
 
 # ------------------------------
 # 5. Finished

@@ -10,8 +10,8 @@ BOOT="${TARGET}1"
 VAR="${TARGET}2"
 HOME="${TARGET}3"
 
-BOOT_SIZE_MIB=4096
-VAR_SIZE_MIB=8192
+BOOT_SIZE_MIB=1024
+VAR_SIZE_MIB=10240
 # ==============================
 
 echo "=============================================="
