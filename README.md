@@ -23,7 +23,7 @@ Single drive (SSD/USB...) with:
 # TLDR
 1. Create bootable USB1 with [Alpine Linux ISO](https://alpinelinux.org/downloads/)
 2. Copy the scripts from this repo onto the USB1 drive.
-3. Connect USB1 with the ISO and boot it (so it is /dev/sds).
+3. Connect USB1 with the ISO and boot it (so it is /dev/sda).
 4. Connect the target USB2 for install (so it is /dev/sdb).
 5. Run `prepare_usb2_diskless.sh` script.
 6. Disconnect USB1 with ISO
