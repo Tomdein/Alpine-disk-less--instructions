@@ -18,13 +18,13 @@ Single drive (SSD/USB...) with:
 - Persistent /home partition
 ---
 # TLDR
-- Create bootable USB1 with [Alpine Linux ISO](https://alpinelinux.org/downloads/)
-- Copy the scripts from this repo onto the USB1 drive.
-- Connect USB1 with the ISO and boot it (so it is /dev/sds).
-- Connect the target USB2 for install (so it is /dev/sdb).
-- Run `prepare_diskless.sh` script.
-- Disconnect USB1 with ISO
-- Reboot
-- Run the `finish_diskless.sh` form `/media/usb` or `/media/sdaX`
-- **Run `lbu commit` or equivalent (`lbu ci`)!**
-- Profit
+1. Create bootable USB1 with [Alpine Linux ISO](https://alpinelinux.org/downloads/)
+2. Copy the scripts from this repo onto the USB1 drive.
+3. Connect USB1 with the ISO and boot it (so it is /dev/sds).
+4. Connect the target USB2 for install (so it is /dev/sdb).
+5. Run `prepare_diskless.sh` script.
+6. Disconnect USB1 with ISO
+7. Reboot
+8. Run the `finish_diskless.sh` form `/media/usb` or `/media/sdaX`
+9. **Run `lbu commit` or equivalent (`lbu ci`)!**
+10. Profit
